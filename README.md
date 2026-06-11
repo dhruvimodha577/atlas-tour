@@ -1,12 +1,5 @@
 ## Atlas-tour
-Tour booking and management system built with PHP, MySQL, Bootstrap, and JavaScript
-
-## Author
-
-- Name: Dhruvi Modha
-- Enrollment No: 246270307067
-- Semester: 5th
-- College: Government Polytechnic Porbandar
+A comprehensive tour booking and management system that allows users to browse tour packages, make bookings, and manage their reservations while providing administrators with tools to manage packages and customer interactions.
 
   ## Features
 - User Registration & Login
@@ -17,14 +10,13 @@ Tour booking and management system built with PHP, MySQL, Bootstrap, and JavaScr
 - Password Reset System
 
 ## Technologies Used
-- PHP
-- MySQL
-- Bootstrap 5
-- JavaScript
-- HTML & CSS
+Backend: PHP
+Database: MySQL
+Frontend: Bootstrap 5, HTML, CSS, JavaScript
+Server: XAMPP (Apache)
 
 ## Installation
-1. Clone the repository.
-2. Import the database into MySQL.
-3. Configure database settings.
-4. Run the project on XAMPP.
+# Requirements
+PHP 7.4 or higher
+MySQL 5.7 or higher
+XAMPP or similar local development environment
