@@ -1,114 +1,238 @@
 <?php
-include "config/database.php";
-
-// Redirect if already logged in
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-if (isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+session_start();
+if (isset($_SESSION['admin_id'])) {
+    header("Location: dashboard.php");
     exit();
 }
 
-$info_msg = "";
+$error = "";
 
-if (isset($_GET['msg'])) {
-    if ($_GET['msg'] == 'booking') {
-        $info_msg = "You need to do login, you cannot book without logging in.";
-    } elseif ($_GET['msg'] == 'contact') {
-        $info_msg = "You need to do login to contact us.";
-    } elseif ($_GET['msg'] == 'password_reset') {
-        $info_msg = "Password reset successfully! Please log in with your new password.";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    require_once '../config/database.php';
+
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    // Student level username dhrv and password 123456
+    if ($username === 'dhrv' && $password === '123456') {
+        $_SESSION['admin_id'] = 999;
+        $_SESSION['admin_username'] = 'dhrv';
+        header("Location: dashboard.php");
+        exit();
+    }
+
+    $sql = "SELECT * FROM admin WHERE username = '$username'";
+    $result = mysqli_query($conn, $sql);
+    $admin = mysqli_fetch_assoc($result);
+
+    if ($admin && password_verify($password, $admin['password'])) {
+        $_SESSION['admin_id'] = $admin['id'];
+        $_SESSION['admin_username'] = $admin['username'];
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        $error = "Invalid username or password.";
     }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Atlas Tour - Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light text-dark">
-<?php include "includes/header.php"; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login – Atlas Tour</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-5">
-      <div class="bg-white shadow p-4 rounded text-dark">
-        <div>
-          <h2 class="text-center mb-4">Login</h2>
-          
-          <div id="alertContainer">
-            <?php if($info_msg != "") { echo "<div class='alert alert-warning text-center fw-bold'>$info_msg</div>"; } ?>
-          </div>
-
-          <form id="loginForm">
-            <div class="mb-3">
-              <label>Email</label>
-              <input type="email" name="email" class="form-control" required placeholder="Enter Email">
-            </div>
-            <div class="mb-3">
-              <label>Password</label>
-              <input type="password" name="password" class="form-control" required placeholder="Enter Password">
-            </div>
-            <button type="submit" class="btn btn-info rounded-pill fw-bold w-100 mt-3 text-dark">Login</button>
-            <div class="text-end mt-2">
-              <a href="modules/auth/forgot_password.php" class="text-warning text-decoration-none small">Forgot Password?</a>
-            </div>
-          </form>
-
-          <p class="mt-4 text-center">Don't have an account? <a href="register.php" class="text-primary">Register Here</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php include "includes/footer.php"; ?>
-<script>
-document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const email = this.email.value;
-    const password = this.password.value;
-    const alertContainer = document.getElementById('alertContainer');
-    const submitBtn = this.querySelector('button[type="submit"]');
-    
-    // Clear previous alerts
-    alertContainer.innerHTML = '';
-    
-    // Disable button during loading
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Logging in...';
-    
-    fetch('api/login.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-    })
-    .then(response => response.json().then(data => ({ ok: response.ok, body: data })))
-    .then(res => {
-        if (res.ok && res.body.success) {
-            alertContainer.innerHTML = `<div class='alert alert-success text-center fw-bold'>${res.body.message} Redirecting...</div>`;
-            setTimeout(() => {
-                window.location.href = 'index.php';
-            }, 1000);
-        } else {
-            alertContainer.innerHTML = `<div class='alert alert-danger'>${res.body.message || 'Invalid Email or Password!'}</div>`;
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Login';
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: #FAFAFA;
+            color: #171717;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alertContainer.innerHTML = `<div class='alert alert-danger'>An error occurred. Please try again later.</div>`;
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Login';
-    });
-});
-</script>
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 12px;
+            padding: 40px 32px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo .icon-container {
+            width: 48px;
+            height: 48px;
+            background: #FAFAFA;
+            border: 1px solid #E5E5E5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 16px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #171717;
+            letter-spacing: -0.3px;
+        }
+
+        .logo p {
+            color: #737373;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .error-msg {
+            background: #FEF2F2;
+            border: 1px solid #FCA5A5;
+            color: #DC2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #171717;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #737373;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 11px 16px 11px 40px;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 8px;
+            color: #171717;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #2563EB;
+        }
+
+        input::placeholder { color: #A3A3A3; }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #2563EB;
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: #1D4ED8;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+        }
+
+        .footer-note a {
+            color: #737373;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-note a:hover {
+            color: #171717;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="icon-container">✈️</div>
+                <h1>Atlas Tour</h1>
+                <p>Sign in to administrative panel</p>
+            </div>
+
+            <?php if ($error): ?>
+                <div class="error-msg">
+                    <span>⚠️</span>
+                    <span><?php echo $error; ?></span>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <span class="input-icon">🔒</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+
+            <div class="footer-note">
+                <a href="../index.php">← Back to Atlas Tour Home</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
