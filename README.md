@@ -16,7 +16,9 @@ Frontend: Bootstrap 5, HTML, CSS, JavaScript
 Server: XAMPP (Apache)
 
 ## Installation
-# Requirements
-PHP 7.4 or higher
-MySQL 5.7 or higher
-XAMPP or similar local development environment
+
+Requirements
+
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- XAMPP or similar local development environment
