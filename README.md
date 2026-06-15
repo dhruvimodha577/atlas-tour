@@ -18,7 +18,7 @@ Atlast Tour is a travel and tourism web application that helps users explore des
 - MySQL
 
 ## 🔗 Live Demo
-**Website:** https://atlastour.byethost13.com/Atlast/
+**Website:** http://atlastour.byethost13.com/Atlast/
 
 **Admin Panel:** https://atlastour.byethost13.com/Atlast/admin/login.php
 
