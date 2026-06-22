@@ -22,8 +22,8 @@ Atlast Tour is a travel and tourism web application that helps users explore des
 
 **Admin Panel:** https://atlastour.byethost13.com/Atlast/admin/login.php
 
-### Admin User name:dhrv
-### admin panel pass : 123456
+Admin panel username : dhrv
+Admin panel password : 123456
 
 ## 👩‍💻 Developed By
 **Dhruvi Modha**
