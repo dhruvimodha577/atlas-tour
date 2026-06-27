@@ -18,14 +18,8 @@ Atlast Tour is a travel and tourism web application that helps users explore des
 - MySQL
 
 ## 🔗 Live Demo
-**Website:** http://atlastour.byethost13.com/Atlast/
+**Website:** atlas.unilive360.in/Atlast/
 
-**Admin Panel:** https://atlastour.byethost13.com/Atlast/admin/login.php
-
-Admin panel username : dhrv
-
-
-Admin panel password : 123456
 
 ## 👩‍💻 Developed By
 **Dhruvi Modha**
