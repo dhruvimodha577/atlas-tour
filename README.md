@@ -19,8 +19,7 @@ Atlast Tour is a travel and tourism web application that helps users explore des
 
 ## 🔗 Live Demo
 **Website:** 
-
-http://atlas.unilive360.in/Atlast/
+https://atlas.unilive360.in/Atlast
 
 
 ## 👩‍💻 Developed By
